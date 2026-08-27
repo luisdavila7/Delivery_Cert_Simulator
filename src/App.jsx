@@ -9,22 +9,26 @@ import SimulationIntro from './components/SimulationIntro'
 import ExamRunner from './components/ExamRunner'
 import ResultsSummary from './components/ResultsSummary'
 import History from './components/History'
+import LoadingScreen from './components/LoadingScreen'
 import './App.css'
 
 export default function App() {
   const [screen, setScreen] = useState('home')
   const [mode, setMode] = useState(null)
+  const [candidateName, setCandidateName] = useState('')
   const [questions, setQuestions] = useState([])
   const [answers, setAnswers] = useState({})
   const [error, setError] = useState(null)
   const [historyVersion, setHistoryVersion] = useState(0)
 
   async function startExam(examMode, params) {
+    const { name, ...rest } = params
     setMode(examMode)
+    setCandidateName(name ?? '')
     setError(null)
     setScreen('loading')
     try {
-      const generated = await generateQuestions({ mode: examMode, ...params })
+      const generated = await generateQuestions({ mode: examMode, ...rest })
       setQuestions(generated)
       setScreen('exam')
     } catch (err) {
@@ -39,6 +43,7 @@ export default function App() {
     const { correct, total, percentage } = scoreSession(questions, finalAnswers)
     saveSession({
       timestamp: Date.now(),
+      name: candidateName,
       mode,
       correct,
       total,
@@ -69,17 +74,20 @@ export default function App() {
           <SimulationIntro onBack={goHome} onStart={(params) => startExam('simulation', params)} />
         )}
 
-        {screen === 'loading' && (
-          <div className="loading-screen">
-            <p>Generating your {mode === 'simulation' ? '80-question simulation' : 'practice questions'}...</p>
-            <p className="loading-hint">This calls OpenAI live and usually takes a bit longer for the full simulation.</p>
-          </div>
+        {screen === 'loading' && <LoadingScreen mode={mode} />}
+
+        {screen === 'exam' && (
+          <ExamRunner mode={mode} questions={questions} name={candidateName} onFinish={handleFinish} />
         )}
 
-        {screen === 'exam' && <ExamRunner mode={mode} questions={questions} onFinish={handleFinish} />}
-
         {screen === 'results' && (
-          <ResultsSummary mode={mode} questions={questions} answers={answers} onDone={goHome} />
+          <ResultsSummary
+            mode={mode}
+            questions={questions}
+            answers={answers}
+            name={candidateName}
+            onDone={goHome}
+          />
         )}
 
         {screen === 'history' && (

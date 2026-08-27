@@ -1,4 +1,5 @@
 const STORAGE_KEY = 'pspo1-simulator-history'
+const LAST_NAME_KEY = 'pspo1-simulator-last-name'
 
 export function loadHistory() {
   try {
@@ -17,4 +18,20 @@ export function saveSession(session) {
 
 export function clearHistory() {
   localStorage.removeItem(STORAGE_KEY)
+}
+
+export function getLastName() {
+  try {
+    return localStorage.getItem(LAST_NAME_KEY) ?? ''
+  } catch {
+    return ''
+  }
+}
+
+export function saveLastName(name) {
+  try {
+    localStorage.setItem(LAST_NAME_KEY, name)
+  } catch {
+    // ignore storage errors (e.g. private mode)
+  }
 }

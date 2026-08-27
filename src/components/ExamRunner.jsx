@@ -4,7 +4,7 @@ import Timer from './Timer'
 
 const SIMULATION_SECONDS = 60 * 60
 
-export default function ExamRunner({ mode, questions, onFinish }) {
+export default function ExamRunner({ mode, questions, name, onFinish }) {
   const [index, setIndex] = useState(0)
   const [answers, setAnswers] = useState({})
   const [revealed, setRevealed] = useState({})
@@ -15,6 +15,7 @@ export default function ExamRunner({ mode, questions, onFinish }) {
   const isLast = index === questions.length - 1
   const isRevealed = Boolean(revealed[question.id])
   const answeredCount = Object.keys(answers).length
+  const progressPct = Math.round(((index + 1) / questions.length) * 100)
 
   function setSelected(next) {
     setAnswers((prev) => ({ ...prev, [question.id]: next }))
@@ -50,10 +51,23 @@ export default function ExamRunner({ mode, questions, onFinish }) {
   return (
     <div className="exam-runner">
       <div className="exam-header">
-        <span className="exam-progress">
-          Question {index + 1} of {questions.length}
-        </span>
-        {!isPractice && <Timer totalSeconds={SIMULATION_SECONDS} onExpire={() => onFinish(answers)} />}
+        <div className="exam-header-top">
+          {name && <span className="exam-candidate">{name}</span>}
+          {!isPractice && <Timer totalSeconds={SIMULATION_SECONDS} onExpire={() => onFinish(answers)} />}
+        </div>
+        <div className="exam-header-bottom">
+          <span className="exam-progress">
+            Question {index + 1} of {questions.length}
+          </span>
+          {!isPractice && (
+            <span className="exam-answered">
+              {answeredCount} answered / {questions.length} total
+            </span>
+          )}
+        </div>
+        <div className="progress-bar-track">
+          <div className="progress-bar-fill" style={{ width: `${progressPct}%` }} />
+        </div>
       </div>
 
       <QuestionView

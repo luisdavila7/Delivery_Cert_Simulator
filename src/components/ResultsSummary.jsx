@@ -1,6 +1,6 @@
 import { PASS_THRESHOLD, isCorrect, scoreSession } from '../scoring'
 
-export default function ResultsSummary({ mode, questions, answers, onDone }) {
+export default function ResultsSummary({ mode, questions, answers, name, onDone }) {
   const { correct, total, percentage, byDomain } = scoreSession(questions, answers)
   const passed = percentage >= PASS_THRESHOLD
   const missed = questions.filter((q) => !isCorrect(q, answers[q.id]))
@@ -8,6 +8,7 @@ export default function ResultsSummary({ mode, questions, answers, onDone }) {
   return (
     <div className="results-summary">
       <h2>{mode === 'simulation' ? 'Simulation Results' : 'Practice Results'}</h2>
+      {name && <p className="results-candidate">Results for {name}</p>}
 
       <div className="score-banner">
         <div className="score-number">
