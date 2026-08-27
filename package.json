@@ -1,15 +1,20 @@
 {
   "name": "po-certification-simulator",
   "private": true,
-  "version": "0.1.1",
+  "version": "0.2.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "lint": "oxlint",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "build-index": "node scripts/build-index.mjs"
   },
   "dependencies": {
+    "dotenv": "^17.4.2",
+    "mammoth": "^1.12.1",
+    "openai": "^7.7.0",
+    "pdf-parse": "^2.4.5",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
   },
