@@ -18,6 +18,7 @@ export default function History({ sessions, onBack, onRefresh }) {
           <thead>
             <tr>
               <th>Date</th>
+              <th>Name</th>
               <th>Mode</th>
               <th>Score</th>
               <th>Result</th>
@@ -27,6 +28,7 @@ export default function History({ sessions, onBack, onRefresh }) {
             {sessions.map((s) => (
               <tr key={s.timestamp}>
                 <td>{new Date(s.timestamp).toLocaleString()}</td>
+                <td>{s.name ?? '—'}</td>
                 <td>{s.mode}</td>
                 <td>
                   {s.correct} / {s.total} ({Math.round(s.percentage * 100)}%)

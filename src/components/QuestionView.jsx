@@ -23,6 +23,7 @@ export default function QuestionView({ question, selected, onChange, revealed, s
     <div className="question-card">
       {showDomain && <div className="question-domain">{question.domain}</div>}
       <p className="question-text">{question.question}</p>
+      {isMultiple && <div className="multi-select-badge">Select all that apply</div>}
       <ul className="options-list">
         {question.options.map((option, index) => {
           const isSelected = selected.includes(index)
