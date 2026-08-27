@@ -1,0 +1,103 @@
+import { useState } from 'react'
+import QuestionView from './QuestionView'
+import Timer from './Timer'
+
+const SIMULATION_SECONDS = 60 * 60
+
+export default function ExamRunner({ mode, questions, onFinish }) {
+  const [index, setIndex] = useState(0)
+  const [answers, setAnswers] = useState({})
+  const [revealed, setRevealed] = useState({})
+
+  const isPractice = mode === 'practice'
+  const question = questions[index]
+  const selected = answers[question.id] ?? []
+  const isLast = index === questions.length - 1
+  const isRevealed = Boolean(revealed[question.id])
+  const answeredCount = Object.keys(answers).length
+
+  function setSelected(next) {
+    setAnswers((prev) => ({ ...prev, [question.id]: next }))
+  }
+
+  function handleCheck() {
+    setRevealed((prev) => ({ ...prev, [question.id]: true }))
+  }
+
+  function goNext() {
+    if (isLast) {
+      onFinish(answers)
+    } else {
+      setIndex((i) => i + 1)
+    }
+  }
+
+  function goPrev() {
+    setIndex((i) => Math.max(0, i - 1))
+  }
+
+  function handleSubmit() {
+    if (answeredCount < questions.length) {
+      const missing = questions.length - answeredCount
+      const proceed = window.confirm(
+        `You still have ${missing} unanswered question(s). Submit anyway?`,
+      )
+      if (!proceed) return
+    }
+    onFinish(answers)
+  }
+
+  return (
+    <div className="exam-runner">
+      <div className="exam-header">
+        <span className="exam-progress">
+          Question {index + 1} of {questions.length}
+        </span>
+        {!isPractice && <Timer totalSeconds={SIMULATION_SECONDS} onExpire={() => onFinish(answers)} />}
+      </div>
+
+      <QuestionView
+        question={question}
+        selected={selected}
+        onChange={setSelected}
+        revealed={isPractice && isRevealed}
+        showDomain={!isPractice}
+      />
+
+      <div className="exam-nav">
+        {isPractice ? (
+          <>
+            {!isRevealed ? (
+              <button
+                type="button"
+                className="primary-button"
+                onClick={handleCheck}
+                disabled={selected.length === 0}
+              >
+                Check Answer
+              </button>
+            ) : (
+              <button type="button" className="primary-button" onClick={goNext}>
+                {isLast ? 'Finish' : 'Next'}
+              </button>
+            )}
+          </>
+        ) : (
+          <>
+            <button type="button" className="secondary-button" onClick={goPrev} disabled={index === 0}>
+              Previous
+            </button>
+            {!isLast ? (
+              <button type="button" className="secondary-button" onClick={goNext}>
+                Next
+              </button>
+            ) : null}
+            <button type="button" className="primary-button" onClick={handleSubmit}>
+              Submit Exam
+            </button>
+          </>
+        )}
+      </div>
+    </div>
+  )
+}
