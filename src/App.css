@@ -64,6 +64,23 @@ body {
   margin-bottom: 1.5rem;
 }
 
+.value-props {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.value-prop-chip {
+  font-size: 0.8rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-dim);
+}
+
 .exam-picker {
   display: flex;
   justify-content: center;

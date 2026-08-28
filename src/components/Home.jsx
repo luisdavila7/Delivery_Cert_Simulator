@@ -6,6 +6,12 @@ export default function Home({ onSelect, examId, onSelectExam }) {
       <h1>Delivery Cert Simulator</h1>
       <p className="subtitle">Agile, project, and product delivery certifications — grounded in your own knowledge base.</p>
 
+      <div className="value-props">
+        <span className="value-prop-chip">🎯 Exam-accurate blueprints</span>
+        <span className="value-prop-chip">📚 Grounded in your own knowledge base</span>
+        <span className="value-prop-chip">📊 Track your progress</span>
+      </div>
+
       <div className="exam-picker">
         {Object.values(EXAMS).map((exam) => (
           <button
