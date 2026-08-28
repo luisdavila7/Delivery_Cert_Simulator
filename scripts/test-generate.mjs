@@ -3,19 +3,26 @@
 // Uses small counts on purpose to keep the OpenAI cost of each test run trivial.
 import 'dotenv/config'
 import { generateQuestions } from '../lib/generateQuestions.mjs'
+import { EXAMS } from '../shared/exams.mjs'
 
-const DOMAINS = ['Scrum Framework', 'Developing People and Teams', 'Managing Products with Agility']
+async function testExam(exam) {
+  console.log(`\n=== ${exam.label} ===`)
 
-async function main() {
-  console.log('--- Practice mode test (1 domain, 3 questions) ---')
-  const practice = await generateQuestions({ domains: ['Scrum Framework'], count: 3 })
+  console.log(`--- Practice mode test (1 domain, 3 questions) ---`)
+  const practice = await generateQuestions({ examId: exam.id, domains: [exam.domains[0]], count: 3 })
   console.log(JSON.stringify(practice, null, 2))
 
-  console.log('\n--- Simulation mode test (all 3 domains, 6 questions total) ---')
-  const simulation = await generateQuestions({ domains: DOMAINS, count: 6 })
+  console.log(`\n--- Simulation mode test (all domains, 6 questions total) ---`)
+  const simulation = await generateQuestions({ examId: exam.id, domains: exam.domains, count: 6 })
   console.log(JSON.stringify(simulation, null, 2))
 
-  console.log(`\nPractice: ${practice.length} questions. Simulation: ${simulation.length} questions.`)
+  console.log(`\n${exam.label} - Practice: ${practice.length} questions. Simulation: ${simulation.length} questions.`)
+}
+
+async function main() {
+  for (const exam of Object.values(EXAMS)) {
+    await testExam(exam)
+  }
 }
 
 main().catch((err) => {

@@ -1,3 +1,4 @@
+import { getExam } from '../../shared/exams.mjs'
 import { clearHistory } from '../storage'
 
 export default function History({ sessions, onBack, onRefresh }) {
@@ -19,6 +20,7 @@ export default function History({ sessions, onBack, onRefresh }) {
             <tr>
               <th>Date</th>
               <th>Name</th>
+              <th>Exam</th>
               <th>Mode</th>
               <th>Score</th>
               <th>Result</th>
@@ -29,6 +31,7 @@ export default function History({ sessions, onBack, onRefresh }) {
               <tr key={s.timestamp}>
                 <td>{new Date(s.timestamp).toLocaleString()}</td>
                 <td>{s.name ?? '—'}</td>
+                <td>{s.examId ? getExam(s.examId).label : '—'}</td>
                 <td>{s.mode}</td>
                 <td>
                   {s.correct} / {s.total} ({Math.round(s.percentage * 100)}%)

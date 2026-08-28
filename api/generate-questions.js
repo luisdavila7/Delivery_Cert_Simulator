@@ -1,8 +1,7 @@
 import { generateQuestions } from '../lib/generateQuestions.mjs'
+import { getExam } from '../shared/exams.mjs'
 
-const DOMAINS = ['Scrum Framework', 'Developing People and Teams', 'Managing Products with Agility']
-
-// Vercel serverless function - POST { mode: 'practice' | 'simulation', domain?, count? }
+// Vercel serverless function - POST { examId, mode: 'practice' | 'simulation', domain?, count? }
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     res.status(405).json({ error: 'Method not allowed' })
@@ -10,11 +9,12 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { mode = 'practice', domain, count } = req.body ?? {}
-    const domains = mode === 'simulation' ? DOMAINS : domain ? [domain] : DOMAINS
-    const total = count ?? (mode === 'simulation' ? 80 : 10)
+    const { examId, mode = 'practice', domain, count } = req.body ?? {}
+    const exam = getExam(examId)
+    const domains = mode === 'simulation' ? exam.domains : domain ? [domain] : exam.domains
+    const total = count ?? (mode === 'simulation' ? exam.simulation.questionCount : 10)
 
-    const questions = await generateQuestions({ domains, count: total })
+    const questions = await generateQuestions({ examId: exam.id, domains, count: total })
     res.status(200).json({ questions })
   } catch (err) {
     console.error(err)
