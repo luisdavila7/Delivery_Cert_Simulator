@@ -1,10 +1,13 @@
-# Exam Simulator
+# Delivery Cert Simulator
 
-A practice/exam simulator for professional certifications, with questions generated live by AI
-and grounded in a personal knowledge base built from Gemini NotebookLM and official source
-material. The candidate picks which certification to practice; each is driven by a single shared
-exam registry ([`shared/exams.mjs`](shared/exams.mjs)) so adding a new certification means adding
-one config entry, not touching the whole pipeline.
+**Live app:** https://deliverycertificationsimulator.vercel.app/
+**Repo:** https://github.com/luisdavila7/Delivery_Cert_Simulator
+
+A practice/exam simulator for Agile, project, and product delivery certifications, with questions
+generated live by AI and grounded in a personal knowledge base built from Gemini NotebookLM and
+official source material. The candidate picks which certification to practice; each is driven by a
+single shared exam registry ([`shared/exams.mjs`](shared/exams.mjs)) so adding a new certification
+(e.g. SAFe) means adding one config entry, not touching the whole pipeline.
 
 ## Supported exams
 
