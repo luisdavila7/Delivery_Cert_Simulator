@@ -1,12 +1,8 @@
-const DOMAINS = ['Scrum Framework', 'Developing People and Teams', 'Managing Products with Agility']
-
-export { DOMAINS }
-
-export async function generateQuestions({ mode, domain, count }) {
+export async function generateQuestions({ examId, mode, domain, count }) {
   const response = await fetch('/api/generate-questions', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ mode, domain, count }),
+    body: JSON.stringify({ examId, mode, domain, count }),
   })
 
   if (!response.ok) {

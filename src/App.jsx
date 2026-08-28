@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import packageJson from '../package.json'
+import { getExam } from '../shared/exams.mjs'
 import { generateQuestions } from './api'
 import { scoreSession } from './scoring'
-import { loadHistory, saveSession } from './storage'
+import { loadHistory, saveSession, getLastExamId, saveLastExamId } from './storage'
 import Home from './components/Home'
 import PracticeSetup from './components/PracticeSetup'
 import SimulationIntro from './components/SimulationIntro'
@@ -15,11 +16,19 @@ import './App.css'
 export default function App() {
   const [screen, setScreen] = useState('home')
   const [mode, setMode] = useState(null)
+  const [examId, setExamId] = useState(() => getLastExamId())
   const [candidateName, setCandidateName] = useState('')
   const [questions, setQuestions] = useState([])
   const [answers, setAnswers] = useState({})
   const [error, setError] = useState(null)
   const [historyVersion, setHistoryVersion] = useState(0)
+
+  const exam = getExam(examId)
+
+  function selectExam(nextExamId) {
+    setExamId(nextExamId)
+    saveLastExamId(nextExamId)
+  }
 
   async function startExam(examMode, params) {
     const { name, ...rest } = params
@@ -28,7 +37,7 @@ export default function App() {
     setError(null)
     setScreen('loading')
     try {
-      const generated = await generateQuestions({ mode: examMode, ...rest })
+      const generated = await generateQuestions({ examId, mode: examMode, ...rest })
       setQuestions(generated)
       setScreen('exam')
     } catch (err) {
@@ -44,11 +53,12 @@ export default function App() {
     saveSession({
       timestamp: Date.now(),
       name: candidateName,
+      examId,
       mode,
       correct,
       total,
       percentage,
-      passed: percentage >= 0.85,
+      passed: percentage >= exam.simulation.passThreshold,
     })
     setHistoryVersion((v) => v + 1)
     setScreen('results')
@@ -64,25 +74,26 @@ export default function App() {
       <main className="app-main">
         {error && <div className="error-banner">{error}</div>}
 
-        {screen === 'home' && <Home onSelect={setScreen} />}
+        {screen === 'home' && <Home onSelect={setScreen} examId={examId} onSelectExam={selectExam} />}
 
         {screen === 'practice-setup' && (
-          <PracticeSetup onBack={goHome} onStart={(params) => startExam('practice', params)} />
+          <PracticeSetup exam={exam} onBack={goHome} onStart={(params) => startExam('practice', params)} />
         )}
 
         {screen === 'simulation-intro' && (
-          <SimulationIntro onBack={goHome} onStart={(params) => startExam('simulation', params)} />
+          <SimulationIntro exam={exam} onBack={goHome} onStart={(params) => startExam('simulation', params)} />
         )}
 
-        {screen === 'loading' && <LoadingScreen mode={mode} />}
+        {screen === 'loading' && <LoadingScreen mode={mode} exam={exam} />}
 
         {screen === 'exam' && (
-          <ExamRunner mode={mode} questions={questions} name={candidateName} onFinish={handleFinish} />
+          <ExamRunner mode={mode} exam={exam} questions={questions} name={candidateName} onFinish={handleFinish} />
         )}
 
         {screen === 'results' && (
           <ResultsSummary
             mode={mode}
+            exam={exam}
             questions={questions}
             answers={answers}
             name={candidateName}

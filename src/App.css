@@ -61,7 +61,35 @@ body {
 
 .subtitle {
   color: var(--text-dim);
+  margin-bottom: 1.5rem;
+}
+
+.exam-picker {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
   margin-bottom: 2rem;
+}
+
+.exam-picker-option {
+  font-size: 0.9rem;
+  padding: 0.5rem 1.1rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-dim);
+  cursor: pointer;
+}
+
+.exam-picker-option:hover {
+  background: var(--surface-alt);
+}
+
+.exam-picker-option.selected {
+  background: var(--selected-bg);
+  border-color: var(--selected-border);
+  color: var(--text);
+  font-weight: 600;
 }
 
 .home-actions {
@@ -140,6 +168,16 @@ body {
 .intro-list {
   color: var(--text-dim);
   line-height: 1.6;
+}
+
+.intro-disclaimer {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.6rem 0.9rem;
+  margin: -0.5rem 0 1.25rem;
 }
 
 .loading-screen {
@@ -345,6 +383,7 @@ body {
 /* Results */
 .score-banner {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 1rem;
   background: var(--surface);
@@ -352,6 +391,12 @@ body {
   border-radius: 10px;
   padding: 1.25rem;
   margin: 1rem 0 1.5rem;
+}
+
+.pass-badge-note {
+  flex-basis: 100%;
+  font-size: 0.8rem;
+  color: var(--text-dim);
 }
 
 .score-number {

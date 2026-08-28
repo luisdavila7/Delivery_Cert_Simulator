@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-export default function LoadingScreen({ mode }) {
+export default function LoadingScreen({ mode, exam }) {
   const [elapsed, setElapsed] = useState(0)
 
   useEffect(() => {
@@ -11,7 +11,10 @@ export default function LoadingScreen({ mode }) {
   return (
     <div className="loading-screen">
       <div className="spinner" aria-hidden="true" />
-      <p>Generating your {mode === 'simulation' ? '80-question simulation' : 'practice questions'}...</p>
+      <p>
+        Generating your {exam.label}{' '}
+        {mode === 'simulation' ? `${exam.simulation.questionCount}-question simulation` : 'practice questions'}...
+      </p>
       <p className="loading-hint">
         This calls OpenAI live and usually takes a bit longer for the full simulation.
       </p>

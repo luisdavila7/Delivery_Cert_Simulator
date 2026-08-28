@@ -1,13 +1,15 @@
-import { PASS_THRESHOLD, isCorrect, scoreSession } from '../scoring'
+import { isCorrect, scoreSession } from '../scoring'
 
-export default function ResultsSummary({ mode, questions, answers, name, onDone }) {
+export default function ResultsSummary({ mode, exam, questions, answers, name, onDone }) {
   const { correct, total, percentage, byDomain } = scoreSession(questions, answers)
-  const passed = percentage >= PASS_THRESHOLD
+  const passed = percentage >= exam.simulation.passThreshold
   const missed = questions.filter((q) => !isCorrect(q, answers[q.id]))
 
   return (
     <div className="results-summary">
-      <h2>{mode === 'simulation' ? 'Simulation Results' : 'Practice Results'}</h2>
+      <h2>
+        {exam.label} &mdash; {mode === 'simulation' ? 'Simulation Results' : 'Practice Results'}
+      </h2>
       {name && <p className="results-candidate">Results for {name}</p>}
 
       <div className="score-banner">
@@ -17,6 +19,11 @@ export default function ResultsSummary({ mode, questions, answers, name, onDone 
         <div className="score-percentage">{Math.round(percentage * 100)}%</div>
         {mode === 'simulation' && (
           <div className={`pass-badge ${passed ? 'pass' : 'fail'}`}>{passed ? 'PASS' : 'FAIL'}</div>
+        )}
+        {mode === 'simulation' && !exam.simulation.thresholdIsOfficial && (
+          <div className="pass-badge-note">
+            Estimated result &mdash; {exam.org} does not publish an official passing score.
+          </div>
         )}
       </div>
 

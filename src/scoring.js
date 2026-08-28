@@ -1,5 +1,3 @@
-export const PASS_THRESHOLD = 0.85
-
 function sameSet(a, b) {
   if (a.length !== b.length) return false
   const sortedA = [...a].sort()

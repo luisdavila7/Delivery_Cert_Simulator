@@ -2,9 +2,8 @@ import { useState } from 'react'
 import QuestionView from './QuestionView'
 import Timer from './Timer'
 
-const SIMULATION_SECONDS = 60 * 60
-
-export default function ExamRunner({ mode, questions, name, onFinish }) {
+export default function ExamRunner({ mode, exam, questions, name, onFinish }) {
+  const simulationSeconds = exam.simulation.minutes * 60
   const [index, setIndex] = useState(0)
   const [answers, setAnswers] = useState({})
   const [revealed, setRevealed] = useState({})
@@ -53,7 +52,7 @@ export default function ExamRunner({ mode, questions, name, onFinish }) {
       <div className="exam-header">
         <div className="exam-header-top">
           {name && <span className="exam-candidate">{name}</span>}
-          {!isPractice && <Timer totalSeconds={SIMULATION_SECONDS} onExpire={() => onFinish(answers)} />}
+          {!isPractice && <Timer totalSeconds={simulationSeconds} onExpire={() => onFinish(answers)} />}
         </div>
         <div className="exam-header-bottom">
           <span className="exam-progress">

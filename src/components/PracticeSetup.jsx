@@ -1,13 +1,10 @@
 import { useState } from 'react'
-import { DOMAINS } from '../api'
 import { getLastName, saveLastName } from '../storage'
 
-const COUNT_OPTIONS = [5, 10, 20]
-
-export default function PracticeSetup({ onStart, onBack }) {
+export default function PracticeSetup({ exam, onStart, onBack }) {
   const [name, setName] = useState(() => getLastName())
   const [domain, setDomain] = useState('all')
-  const [count, setCount] = useState(10)
+  const [count, setCount] = useState(exam.practiceCountOptions[1] ?? exam.practiceCountOptions[0])
 
   const trimmedName = name.trim()
 
@@ -20,7 +17,9 @@ export default function PracticeSetup({ onStart, onBack }) {
   return (
     <div className="setup-screen">
       <h2>Practice Mode</h2>
-      <p>Untimed. Instant feedback and explanations after each question.</p>
+      <p>
+        {exam.label} &middot; Untimed. Instant feedback and explanations after each question.
+      </p>
 
       <label className="field">
         Your name
@@ -36,7 +35,7 @@ export default function PracticeSetup({ onStart, onBack }) {
         Domain
         <select value={domain} onChange={(e) => setDomain(e.target.value)}>
           <option value="all">All domains</option>
-          {DOMAINS.map((d) => (
+          {exam.domains.map((d) => (
             <option key={d} value={d}>
               {d}
             </option>
@@ -47,7 +46,7 @@ export default function PracticeSetup({ onStart, onBack }) {
       <label className="field">
         Number of questions
         <select value={count} onChange={(e) => setCount(Number(e.target.value))}>
-          {COUNT_OPTIONS.map((n) => (
+          {exam.practiceCountOptions.map((n) => (
             <option key={n} value={n}>
               {n}
             </option>
