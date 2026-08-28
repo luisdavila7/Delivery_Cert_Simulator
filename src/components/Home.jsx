@@ -3,8 +3,8 @@ import { EXAMS } from '../../shared/exams.mjs'
 export default function Home({ onSelect, examId, onSelectExam }) {
   return (
     <div className="home">
-      <h1>Exam Simulator</h1>
-      <p className="subtitle">Grounded in your own certification knowledge base.</p>
+      <h1>Delivery Cert Simulator</h1>
+      <p className="subtitle">Agile, project, and product delivery certifications — grounded in your own knowledge base.</p>
 
       <div className="exam-picker">
         {Object.values(EXAMS).map((exam) => (
