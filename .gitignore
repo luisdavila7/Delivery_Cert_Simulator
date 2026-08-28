@@ -18,6 +18,9 @@ dist-ssr
 *.env
 !.env.example
 
+# Local Claude Code working rules (personal, not for GitHub)
+CLAUDE.md
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
