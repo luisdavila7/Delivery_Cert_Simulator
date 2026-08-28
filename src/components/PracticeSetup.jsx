@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { getPracticeSeconds } from '../../shared/exams.mjs'
 import { getLastName, saveLastName } from '../storage'
 
 export default function PracticeSetup({ exam, onStart, onBack }) {
@@ -7,6 +8,7 @@ export default function PracticeSetup({ exam, onStart, onBack }) {
   const [count, setCount] = useState(exam.practiceCountOptions[1] ?? exam.practiceCountOptions[0])
 
   const trimmedName = name.trim()
+  const practiceMinutes = Math.round(getPracticeSeconds(exam, count) / 60)
 
   function handleStart() {
     if (!trimmedName) return
@@ -18,7 +20,8 @@ export default function PracticeSetup({ exam, onStart, onBack }) {
     <div className="setup-screen">
       <h2>Practice Mode</h2>
       <p>
-        {exam.label} &middot; Untimed. Instant feedback and explanations after each question.
+        {exam.label} &middot; {practiceMinutes} min time limit for {count} questions. Instant
+        feedback and explanations after each question.
       </p>
 
       <label className="field">

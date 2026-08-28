@@ -1,14 +1,17 @@
 import { useState } from 'react'
+import { getPracticeSeconds } from '../../shared/exams.mjs'
 import QuestionView from './QuestionView'
 import Timer from './Timer'
 
 export default function ExamRunner({ mode, exam, questions, name, onFinish }) {
-  const simulationSeconds = exam.simulation.minutes * 60
+  const isPractice = mode === 'practice'
+  const totalSeconds = isPractice
+    ? getPracticeSeconds(exam, questions.length)
+    : exam.simulation.minutes * 60
   const [index, setIndex] = useState(0)
   const [answers, setAnswers] = useState({})
   const [revealed, setRevealed] = useState({})
 
-  const isPractice = mode === 'practice'
   const question = questions[index]
   const selected = answers[question.id] ?? []
   const isLast = index === questions.length - 1
@@ -52,7 +55,7 @@ export default function ExamRunner({ mode, exam, questions, name, onFinish }) {
       <div className="exam-header">
         <div className="exam-header-top">
           {name && <span className="exam-candidate">{name}</span>}
-          {!isPractice && <Timer totalSeconds={simulationSeconds} onExpire={() => onFinish(answers)} />}
+          <Timer totalSeconds={totalSeconds} onExpire={() => onFinish(answers)} />
         </div>
         <div className="exam-header-bottom">
           <span className="exam-progress">

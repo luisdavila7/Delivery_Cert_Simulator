@@ -48,3 +48,11 @@ export const DEFAULT_EXAM_ID = 'pspo1'
 export function getExam(examId) {
   return EXAMS[examId] ?? EXAMS[DEFAULT_EXAM_ID]
 }
+
+// Derives a Practice Mode time budget from the exam's own official pace
+// (simulation minutes per question), so every exam in the registry gets a
+// sensible timer automatically - no per-exam practice-duration config needed.
+export function getPracticeSeconds(exam, questionCount) {
+  const paceSecondsPerQuestion = (exam.simulation.minutes * 60) / exam.simulation.questionCount
+  return Math.max(60, Math.round(questionCount * paceSecondsPerQuestion))
+}
